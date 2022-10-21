@@ -1,0 +1,132 @@
+﻿@page "/talk/{id:guid}"
+
+@inject IAgendaClient Client
+
+<PageTitle>Talk detail</PageTitle>
+
+<div class="row">
+    <div class="col">
+        <h1>@model.Title</h1>
+    </div>
+    <div class="col-auto">
+        <a href="/" class="btn btn-primary">Back to agenda</a>
+    </div>
+</div>
+<hr />
+
+<div class="row">
+    <div class="col">
+        @model.Speaker
+    </div>
+    <div class="col-auto">
+        @model.StartingTime.ToString("hh\\:mm") - @model.EndingTime.ToString("hh\\:mm") <strong>(@(model.Duration)h)</strong>
+    </div>
+</div>
+<hr />
+
+@if (!string.IsNullOrWhiteSpace(model.Abstract))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <h5>Abstract</h5>
+            <div>
+                @model.Abstract
+            </div>
+        </div>
+    </div>
+}
+
+<hr />
+<h5>Rate this talk</h5>
+<div class="row mb-3">
+    <div class="col-md-4">
+        <EditForm Model="rateModel" role="form" OnValidSubmit="RateTalkAsync">
+            <div class="mb-2">
+                <label for="rateAuthor">Author</label>
+                <InputText @bind-Value="rateModel.Author" class="form-control" id="rateAuthor" />
+            </div>
+            <div class="mb-2">
+                <label for="talkRate">Rate</label>
+                <InputSelect @bind-Value="rateModel.Rate" class="form-control" id="talkRate">
+                    @foreach (var value in Enumerable.Range(0, 6))
+                    {
+                        <option value="@value">@value</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="mb-2">
+                <label for="rateComment">Comment</label>
+                <InputTextArea @bind-Value="rateModel.Comment" class="form-control" id="rateComment" rows="5" />
+            </div>
+            <div class="mb-2">
+                <button class="btn btn-primary">Save</button>
+                <button type="button" @onclick="CancelRate" class="btn btn-outline-primary">Cancel</button>
+            </div>
+        </EditForm>
+    </div>
+    <div class="col-md-8">
+        @if (model.Rates.Any())
+        {
+            <div class="list-group">
+                @foreach (var rate in model.Rates)
+                {
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between mb-1">
+                            <h5 class="mb-1">@rate.Rate / 5</h5>
+                        </div>
+                        <div>
+                            @if (!string.IsNullOrWhiteSpace(rate.Author))
+                            {
+                                <p class="mb-1">@rate.Author</p>
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(rate.Comment))
+                            {
+                                <p class="mb-1">@rate.Comment</p>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <h5>No rates for this talk</h5>
+        }
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private TalkDetailModel model = new();
+
+    private TalkRateModel rateModel = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await LoadTalkAsync();
+    }
+
+    void CancelRate() => rateModel = new();
+
+    async Task RateTalkAsync()
+    {
+        try
+        {
+            await Client.RateTalkAsync(Id, rateModel);
+            await LoadTalkAsync();
+
+            rateModel = new();
+        }
+        catch
+        {
+
+        }
+    }
+
+    private async Task LoadTalkAsync() => model = await Client.GetTalkDetailAsync(Id) ?? new();
+}

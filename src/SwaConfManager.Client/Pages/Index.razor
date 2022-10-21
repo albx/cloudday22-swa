@@ -1,0 +1,66 @@
+﻿@page "/"
+
+@inject IAgendaClient Client
+@inject IJSRuntime Js
+
+<PageTitle>Agenda</PageTitle>
+
+<div class="row">
+    <div class="col">
+        <h1>Agenda</h1>
+    </div>
+    <div class="col-auto">
+        <a href="talks/add" class="btn btn-primary">Add a new talk</a>
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        @if (!agenda.Any())
+        {
+            <h2>No talks scheduled</h2>
+        }
+        else
+        {
+            <div class="list-group">
+                @foreach (var talk in agenda)
+                {
+                    <div class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">@talk.Title</h5>
+                        </div>
+                        <p class="mb-1"><strong>(@(talk.Duration)h)</strong> @talk.StartingTime.ToString("hh\\:mm") - @talk.EndingTime.ToString("hh\\:mm")</p>
+                        <p class="mb-1">@talk.Speaker</p>
+
+                        <div class="mb-1">
+                            <a href="/talk/@talk.Id" class="btn btn-outline-primary">view</a>
+                            <button type="button" @onclick="@(() => DeleteTalkAsync(talk))" class="btn btn-outline-danger">delete</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private IEnumerable<TalkListItemModel> agenda = Array.Empty<TalkListItemModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await LoadAgendaAsync();
+    }
+
+    async Task DeleteTalkAsync(TalkListItemModel talk)
+    {
+        var confirmed = await Js.InvokeAsync<bool>("confirm", $"You are going to delete talk {talk.Title}. Are you sure?");
+        if (confirmed)
+        {
+            await Client.DeleteTalkAsync(talk.Id);
+            await LoadAgendaAsync();
+        }
+    }
+
+    private async Task LoadAgendaAsync() => agenda = await Client.GetAgendaAsync();
+}
