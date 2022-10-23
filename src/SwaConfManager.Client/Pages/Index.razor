@@ -38,7 +38,11 @@
 
                         <div class="mb-1">
                             <a href="/talk/@talk.Id" class="btn btn-outline-primary">view</a>
-                            <button type="button" @onclick="@(() => DeleteTalkAsync(talk))" class="btn btn-outline-danger">delete</button>
+                            <AuthorizeView Roles="organizer">
+                                <Authorized>
+                                    <button type="button" @onclick="@(() => DeleteTalkAsync(talk))" class="btn btn-outline-danger">delete</button>
+                                </Authorized>
+                            </AuthorizeView>
                         </div>
                     </div>
                 }
