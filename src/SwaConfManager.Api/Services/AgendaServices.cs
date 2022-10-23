@@ -47,9 +47,9 @@ public class AgendaServices
         Data.DeleteTalk(talkId);
     }
 
-    public void CreateTalk(CreateTalkModel model)
+    public void CreateTalk(CreateTalkModel model, string userId)
     {
-        Data.AddTalk(model.Title, model.Speaker, model.Abstract, model.StartingTime, model.EndingTime, model.IsBreakSlot);
+        Data.AddTalk(model.Title, model.Speaker, model.Abstract, model.StartingTime, model.EndingTime, model.IsBreakSlot, userId);
     }
 
     public void RateTalk(Guid talkId, TalkRateModel model)

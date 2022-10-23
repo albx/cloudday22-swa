@@ -1,6 +1,7 @@
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+using SwaConfManager.Api.Extensions;
 using SwaConfManager.Api.Services;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -25,6 +26,11 @@ namespace SwaConfManager.Api
             [Required] Guid id)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
+
+            if (req.GetClientPrincipal() is null)
+            {
+                return req.CreateResponse(HttpStatusCode.Unauthorized);
+            }
 
             if (id == Guid.Empty)
             {

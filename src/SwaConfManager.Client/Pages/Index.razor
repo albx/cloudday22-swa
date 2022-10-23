@@ -9,9 +9,13 @@
     <div class="col">
         <h1>Agenda</h1>
     </div>
-    <div class="col-auto">
-        <a href="talks/add" class="btn btn-primary">Add a new talk</a>
-    </div>
+    <AuthorizeView Roles="organizer">
+        <Authorized>
+            <div class="col-auto">
+                <a href="talks/add" class="btn btn-primary">Add a new talk</a>
+            </div>
+        </Authorized>
+    </AuthorizeView>
 </div>
 <hr />
 <div class="row">

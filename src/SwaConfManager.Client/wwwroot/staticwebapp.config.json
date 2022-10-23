@@ -1,4 +1,11 @@
 {
+  "routes": [
+    {
+      "route": "/api/talk/*",
+      "methods": [ "POST", "DELETE" ],
+      "allowedRoles": [ "organizer" ]
+    }
+  ],
   "navigationFallback": {
     "rewrite": "index.html",
     "exclude": [ "images/*.{png,jpg,gif}", "/css/*.css", "/js/*.js" ]

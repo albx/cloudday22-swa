@@ -2,6 +2,7 @@
 
 @inject IAgendaClient Client
 @inject NavigationManager NavigationManager
+@attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "organizer")]
 
 <PageTitle>Add a new talk</PageTitle>
 
@@ -15,52 +16,54 @@
 </div>
 <hr />
 <div class="row">
-    <EditForm Model="model" class="col-md-12" OnValidSubmit="AddTalkAsync">
-        <DataAnnotationsValidator />
+    <ErrorBoundary>
+        <EditForm Model="model" class="col-md-12" OnValidSubmit="AddTalkAsync">
+            <DataAnnotationsValidator />
 
-        <div class="form-check mb-2">
-            <InputCheckbox @bind-Value="model.IsBreakSlot" class="form-check-input" id="breakSlot" />
-            <label class="form-check-label" for="breakSlot">
-                Break slot
-            </label>
-        </div>
-
-        <div class="mb-2">
-            <label for="talkTitle">Title</label>
-            <InputText @bind-Value="model.Title" class="form-control" id="talkTitle" />
-            <ValidationMessage For="@(() => model.Title)" />
-        </div>
-
-        <div class="mb-2">
-            <label for="talkSpeaker">Speaker</label>
-            <InputText @bind-Value="model.Speaker" class="form-control" id="talkSpeaker" disabled="@model.IsBreakSlot" />
-            <ValidationMessage For="@(() => model.Speaker)" />
-        </div>
-
-        <div class="row mb-2">
-            <div class="col-md-6">
-                <label for="talkStartingTime">From</label>
-                <input type="time" @bind-value="model.StartingTime" class="form-control" id="talkStartingTime" />
-                <ValidationMessage For="@(() => model.StartingTime)" />
+            <div class="form-check mb-2">
+                <InputCheckbox @bind-Value="model.IsBreakSlot" class="form-check-input" id="breakSlot" />
+                <label class="form-check-label" for="breakSlot">
+                    Break slot
+                </label>
             </div>
-            <div class="col-md-6">
-                <label for="talkEndingTime">To</label>
-                <input type="time" @bind-value="model.EndingTime" class="form-control" id="talkEndingTime" />
-                <ValidationMessage For="@(() => model.EndingTime)" />
+
+            <div class="mb-2">
+                <label for="talkTitle">Title</label>
+                <InputText @bind-Value="model.Title" class="form-control" id="talkTitle" />
+                <ValidationMessage For="@(() => model.Title)" />
             </div>
-        </div>
 
-        <div class="mb-2">
-            <label for="talkAbstract">Abstract</label>
-            <InputTextArea @bind-Value="model.Abstract" class="form-control" id="talkAbstract" rows="10" />
-            <ValidationMessage For="@(() => model.Abstract)" />
-        </div>
+            <div class="mb-2">
+                <label for="talkSpeaker">Speaker</label>
+                <InputText @bind-Value="model.Speaker" class="form-control" id="talkSpeaker" disabled="@model.IsBreakSlot" />
+                <ValidationMessage For="@(() => model.Speaker)" />
+            </div>
 
-        <div class="mb-2">
-            <button class="btn btn-primary">Save</button>
-            <button type="button" @onclick="Cancel" class="btn btn-outline-primary">Cancel</button>
-        </div>
-    </EditForm>
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <label for="talkStartingTime">From</label>
+                    <input type="time" @bind-value="model.StartingTime" class="form-control" id="talkStartingTime" />
+                    <ValidationMessage For="@(() => model.StartingTime)" />
+                </div>
+                <div class="col-md-6">
+                    <label for="talkEndingTime">To</label>
+                    <input type="time" @bind-value="model.EndingTime" class="form-control" id="talkEndingTime" />
+                    <ValidationMessage For="@(() => model.EndingTime)" />
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <label for="talkAbstract">Abstract</label>
+                <InputTextArea @bind-Value="model.Abstract" class="form-control" id="talkAbstract" rows="10" />
+                <ValidationMessage For="@(() => model.Abstract)" />
+            </div>
+
+            <div class="mb-2">
+                <button class="btn btn-primary">Save</button>
+                <button type="button" @onclick="Cancel" class="btn btn-outline-primary">Cancel</button>
+            </div>
+        </EditForm>
+    </ErrorBoundary>
 </div>
 
 

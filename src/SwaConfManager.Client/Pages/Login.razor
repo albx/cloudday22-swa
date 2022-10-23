@@ -1,0 +1,26 @@
+﻿@page "/login"
+
+<h3>Login</h3>
+
+<div class="container">
+    @foreach (var provider in providers)
+    {
+        <div class="row mb-2">
+            <div class="col-md-12">
+                <a href="/.auth/login/@provider.Identifier" class="btn btn-primary btn-lg">
+                    @provider.Name
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private IEnumerable<LoginProvider> providers = new[]
+    {
+        new LoginProvider("github", "GitHub"),
+        new LoginProvider("twitter", "Twitter")
+    };
+
+    record LoginProvider(string Identifier, string Name);
+}

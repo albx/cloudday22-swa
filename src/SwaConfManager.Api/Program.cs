@@ -23,6 +23,8 @@ void SeedInitialData(IHost host)
     var agenda = host.Services.GetRequiredService<AgendaServices>();
     var start = 8;
 
+    var userId = Guid.NewGuid().ToString();
+
     for (int i = 1; i <= 5; i++)
     {
         ++start;
@@ -34,7 +36,7 @@ void SeedInitialData(IHost host)
             EndingTime = new TimeSpan(start + 1, 0, 0),
             IsBreakSlot = i == 3,
             Speaker = $"Speaker #{i}"
-        });
+        }, userId);
     }
 }
 #endregion
