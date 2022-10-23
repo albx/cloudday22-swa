@@ -47,7 +47,7 @@ namespace SwaConfManager.Api
 
                 return response;
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
                 return req.CreateResponse(HttpStatusCode.BadRequest);
             }
