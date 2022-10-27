@@ -10,7 +10,7 @@ public class AgendaDataManager
 
     public IEnumerable<TalkRate> GeTalkRates(Guid talkId) => AgendaStore.TalkRates.Where(t => t.TalkId == talkId);
 
-    public void AddTalk(string title, string speaker, string @abstract, TimeSpan startingTime, TimeSpan endingTime, bool isBreakSlot)
+    public void AddTalk(string title, string speaker, string @abstract, TimeSpan startingTime, TimeSpan endingTime, bool isBreakSlot, string userId)
     {
         var talk = new Talk
         {
@@ -20,7 +20,8 @@ public class AgendaDataManager
             EndingTime = endingTime,
             Speaker = speaker,
             StartingTime = startingTime,
-            IsBreakSlot = isBreakSlot
+            IsBreakSlot = isBreakSlot,
+            UserId = userId
         };
 
         AgendaStore.Talks.Add(talk);

@@ -15,4 +15,6 @@ public class Talk
     public TimeSpan EndingTime { get; set; }
 
     public bool IsBreakSlot { get; set; }
+
+    public string UserId { get; set; } = string.Empty;
 }
